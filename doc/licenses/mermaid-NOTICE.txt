@@ -1,0 +1,21 @@
+The bundled build of mermaid.js (app/assets/javascripts/mermaid-11.17.2.min.js)
+embeds the following third-party libraries, as disclosed in its own
+"Bundled license information" comment:
+
+- lodash-es (a modularized build of Lodash, based on Underscore.js)
+  Released under the MIT License.
+  See doc/licenses/lodash.txt.
+
+- DOMPurify 3.4.12
+  Copyright (c) Cure53 and other contributors
+  Released under the Apache License 2.0 and the Mozilla Public License 2.0
+  (dual-licensed). This project uses the Mozilla Public License 2.0 text.
+  See doc/licenses/dompurify.txt.
+
+- cytoscape.js
+  Released under the MIT License. Also embeds a few small third-party code
+  snippets of its own; see doc/licenses/cytoscape-NOTICE.txt.
+  See doc/licenses/cytoscape.txt.
+
+mermaid.js itself is released under the MIT License; see
+doc/licenses/mermaid.txt.

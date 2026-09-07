@@ -1810,6 +1810,13 @@ module ApplicationHelper
       'tribute-5.1.3.min'
     )
     tags << javascript_include_tag('application-legacy', 'responsive')
+    # mermaid.js (several MB) is not included in every page load; the
+    # mermaid Stimulus controller lazily loads it via this URL only when a
+    # ```mermaid code block is actually present on the page.
+    tags <<
+      javascript_tag(
+        "window.MermaidAssetUrl = #{asset_path('mermaid-11.17.2.min.js').to_json};"
+      )
     unless User.current.pref.warn_on_leaving_unsaved == '0'
       warn_text = escape_javascript(l(:text_warn_on_leaving_unsaved))
       tags <<
