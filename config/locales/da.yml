@@ -165,7 +165,7 @@ da:
   general_text_no: 'nej'
   general_text_yes: 'ja'
   general_lang_name: 'Danish (Dansk)'
-  general_csv_separator: ','
+  general_csv_separator: ';'
   general_csv_encoding: ISO-8859-1
   general_pdf_fontname: freesans
   general_pdf_monospaced_fontname: freemono
@@ -1496,7 +1496,7 @@ da:
   setting_issue_done_ratio_interval: Done ratio options interval
   setting_copy_attachments_on_issue_copy: Copy attachments on copy
   field_thousands_delimiter: Thousands delimiter
-  label_involved_principals: Author / Previous assignee
+  label_involved_principals: Author / Recent participants
   label_attachment_summary:
     zero: "%{filename}"
     one: "%{filename} and 1 file"

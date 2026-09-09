@@ -281,7 +281,6 @@ Naming/MemoizedInstanceVariableName:
 # ForbiddenIdentifiers: __id__, __send__
 Naming/MethodName:
   Exclude:
-    - 'lib/redmine/export/pdf.rb'
     - 'lib/redmine/scm/adapters/cvs_adapter.rb'
     - 'lib/redmine/wiki_formatting/textile/redcloth3.rb'
     - 'test/helpers/application_helper_test.rb'
@@ -374,11 +373,6 @@ Rails/DuplicateScope:
 # AllowedReceivers: Gem::Specification, page
 Rails/DynamicFindBy:
   Enabled: false
-
-# This cop supports safe autocorrection (--autocorrect).
-Rails/EagerEvaluationLogMessage:
-  Exclude:
-    - 'app/controllers/application_controller.rb'
 
 Rails/HasAndBelongsToMany:
   Exclude:
@@ -529,15 +523,6 @@ Rails/ShortI18n:
     - 'test/unit/wiki_page_test.rb'
 
 # This cop supports unsafe autocorrection (--autocorrect-all).
-Rails/StrongParametersExpect:
-  Exclude:
-    - 'app/controllers/attachments_controller.rb'
-    - 'app/controllers/custom_field_enumerations_controller.rb'
-    - 'app/controllers/principal_memberships_controller.rb'
-    - 'app/controllers/project_enumerations_controller.rb'
-    - 'app/controllers/webhooks_controller.rb'
-
-# This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: strict, flexible
 Rails/TimeZone:
@@ -579,13 +564,6 @@ Security/Eval:
     - 'app/models/user.rb'
     - 'config/initializers/00-core_plugins.rb'
 
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Security/IoMethods:
-  Exclude:
-    - 'app/models/attachment.rb'
-    - 'test/functional/mail_handler_controller_test.rb'
-    - 'test/unit/mail_handler_test.rb'
-
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: separated, grouped
@@ -612,7 +590,6 @@ Style/Alias:
     - 'app/models/user.rb'
     - 'app/models/version.rb'
     - 'config/initializers/10-patches.rb'
-    - 'lib/redmine/export/pdf.rb'
     - 'lib/redmine/menu_manager.rb'
     - 'lib/redmine/plugin.rb'
     - 'lib/redmine/wiki_formatting/textile/formatter.rb'
@@ -627,7 +604,6 @@ Style/AndOr:
     - 'app/helpers/repositories_helper.rb'
     - 'app/models/query.rb'
     - 'db/migrate/022_serialize_possibles_values.rb'
-    - 'lib/redmine/export/pdf.rb'
     - 'lib/redmine/field_format.rb'
     - 'lib/redmine/scm/adapters/abstract_adapter.rb'
     - 'lib/redmine/scm/adapters/bazaar_adapter.rb'
@@ -685,7 +661,6 @@ Style/ColonMethodCall:
   Exclude:
     - 'app/controllers/admin_controller.rb'
     - 'lib/redmine/configuration.rb'
-    - 'lib/redmine/export/pdf.rb'
     - 'lib/redmine/wiki_formatting.rb'
     - 'lib/redmine/wiki_formatting/textile/redcloth3.rb'
     - 'test/unit/default_data_test.rb'

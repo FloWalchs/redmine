@@ -402,7 +402,8 @@ class IssueQuery < Query
   end
 
   # Returns the issues
-  # Valid options are :order, :offset, :limit, :include, :conditions
+  # Valid options are :order, :offset, :limit, :conditions,
+  # :include, and :preload
   def issues(options={})
     order_option = [group_by_sort_order, (options[:order] || sort_clause)].flatten.reject(&:blank?)
     # The default order of IssueQuery is issues.id DESC(by IssueQuery#default_sort_criteria)
@@ -424,6 +425,9 @@ class IssueQuery < Query
         [:tracker, :author, :assigned_to, :fixed_version,
          :category, :attachments] & columns.map(&:name)
       )
+    if options[:preload]
+      scope = scope.preload(options[:preload])
+    end
     if has_custom_field_column?
       scope = scope.preload(:custom_values)
     end
@@ -589,9 +593,7 @@ class IssueQuery < Query
     end
     groups ||= []
 
-    members_of_groups = groups.inject([]) do |user_ids, group|
-      user_ids + group.user_ids + [group.id]
-    end.uniq.compact.sort.collect(&:to_s)
+    members_of_groups = group_and_member_ids(groups)
 
     '(' + sql_for_field("assigned_to_id", operator, members_of_groups, Issue.table_name, "assigned_to_id", false) + ')'
   end
@@ -627,12 +629,26 @@ class IssueQuery < Query
   def sql_for_author_group_field(field, operator, value)
     groups = value.empty? ? Group.givable : Group.where(:id => value).to_a
 
-    author_groups = groups.inject([]) do |user_ids, group|
-      user_ids + group.user_ids + [group.id]
-    end.uniq.compact.sort.collect(&:to_s)
+    author_groups = group_and_member_ids(groups)
 
     '(' + sql_for_field("author_id", operator, author_groups, Issue.table_name, "author_id", false) + ')'
   end
+
+  # Returns the ids of the given groups and of their members as strings,
+  # fetching the members of all the groups with a single query
+  def group_and_member_ids(groups)
+    group_ids = groups.map(&:id)
+    return [] if group_ids.empty?
+
+    user_ids = User.where(
+      "#{User.table_name}.id IN (SELECT gu.user_id" \
+        " FROM #{User.table_name_prefix}groups_users#{User.table_name_suffix} gu" \
+        " WHERE gu.group_id IN (?))",
+      group_ids
+    ).pluck(:id)
+    (group_ids + user_ids).uniq.compact.sort.collect(&:to_s)
+  end
+  private :group_and_member_ids
 
   def sql_for_author_role_field(field, operator, value)
     role_cond =

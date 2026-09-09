@@ -78,8 +78,8 @@ cs:
   number:
     # Výchozí formát pro čísla
     format:
-      separator: "."
-      delimiter: ""
+      separator: ","
+      delimiter: "."
       precision: 3
     human:
       format:
@@ -151,8 +151,8 @@ cs:
   general_text_no: 'ne'
   general_text_yes: 'ano'
   general_lang_name: 'Czech (Čeština)'
-  general_csv_separator: ','
-  general_csv_decimal_separator: '.'
+  general_csv_separator: ';'
+  general_csv_decimal_separator: ','
   general_csv_encoding: UTF-8
   general_pdf_fontname: freesans
   general_pdf_monospaced_fontname: freemono
@@ -1460,7 +1460,7 @@ cs:
   setting_issue_done_ratio_interval: Krok koeficientu dokončení
   setting_copy_attachments_on_issue_copy: Kopírovat přílohy při kopírování
   field_thousands_delimiter: Oddělovač tisíců
-  label_involved_principals: Autor / Předchozí přiřazený uživatel
+  label_involved_principals: Author / Recent participants
   label_attachment_summary:
     zero: "%{filename}"
     one: "%{filename} a 1 soubor"

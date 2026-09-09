@@ -1850,6 +1850,48 @@ class ApplicationHelperTest < Redmine::HelperTest
     assert_equal ::I18n.t(:label_user_anonymous), t
   end
 
+  def test_link_to_mention
+    set_language_if_valid 'en'
+    user = User.find(2)
+    User.current = User.find(1)
+    issue = Issue.find(1)
+
+    # Mentioning a user
+    result = link_to("@John Smith", "/users/2", :class => "user active user-mention")
+    assert_equal result, link_to_mention(user, nil)
+
+    # Mentioning current user
+    User.current = user
+    result = link_to("@John Smith", "/users/2", :class => "user active user-mention user-current")
+    assert_equal result, link_to_mention(user, nil)
+
+    # Mentioning a user that has visibility over the mentioned object
+    User.current = User.find(1)
+    # Issue 1 is visible to John Smith (user 2)
+    assert issue.visible?(user)
+    result = link_to("@John Smith", "/users/2", :class => "user active user-mention user-mentionable")
+    assert_equal result, link_to_mention(user, issue)
+
+    # Mentioning current user that has visibility over the mentioned object
+    User.current = user
+    result = link_to("@John Smith", "/users/2", :class => "user active user-mention user-current user-mentionable")
+    assert_equal result, link_to_mention(user, issue)
+
+    # Mentioning a user that does not have visibility over the object
+    User.current = User.find(1)
+    unauthorized_user = User.find(3)
+    issue4 = Issue.find(4)
+    assert_not issue4.visible?(unauthorized_user)
+    result = link_to("@Dave Lopper", "/users/3", :class => "user active user-mention")
+    assert_equal result, link_to_mention(unauthorized_user, issue4)
+
+    # Mentioning in a journal
+    journal = Journal.find(1)
+    assert journal.visible?(user)
+    result = link_to("@John Smith", "/users/2", :class => "user active user-mention user-mentionable")
+    assert_equal result, link_to_mention(user, journal)
+  end
+
   def test_link_to_attachment
     a = Attachment.find(3)
     assert_equal(
@@ -2054,19 +2096,42 @@ class ApplicationHelperTest < Redmine::HelperTest
                    principals_options_for_select(users)
   end
 
-  def test_principals_options_for_select_should_include_author_and_previous_assignee
+  def test_principals_options_for_select_should_include_author_previous_assignee_and_last_notes_author
     set_language_if_valid 'en'
-    users = [User.find(2), User.find(3), User.find(1)]
+    users = [User.find(2), User.find(3), User.find(1), User.find(4)]
     @issue = Issue.generate!(author_id: 1, assigned_to_id: 2)
     @issue.init_journal(users.first, 'update')
     @issue.assigned_to_id = 3
     @issue.save
+    Journal.create!(:journalized => @issue, :user_id => 4, :notes => 'Last notes')
 
     result = principals_options_for_select(users)
-    assert_select_in result, 'optgroup[label="Author / Previous assignee"]' do
+    assert_select_in result, 'optgroup[label="Author / Recent participants"]' do
       assert_select 'option:nth-of-type(1)', text: 'Redmine Admin'  # Author
       assert_select 'option:nth-of-type(2)', text: 'John Smith'     # Prior assignee
+      assert_select 'option:nth-of-type(3)', text: 'Robert Hill'    # Last notes author
     end
+  end
+
+  def test_principals_options_for_select_should_not_include_private_last_notes_author_without_permission
+    set_language_if_valid 'en'
+    User.current = User.find(3)
+    users = [User.find(2), User.find(3), User.find(1), User.find(4)]
+    @issue = Issue.generate!(author_id: 1, assigned_to_id: 2)
+    @issue.init_journal(users.first, 'update')
+    @issue.assigned_to_id = 3
+    @issue.save
+    Journal.create!(:journalized => @issue, :user_id => 4, :notes => 'Public notes')
+    Journal.create!(:journalized => @issue, :user_id => 8, :notes => 'Private notes', :private_notes => true)
+
+    result = principals_options_for_select(users)
+    assert_select_in result, 'optgroup[label="Author / Recent participants"]' do
+      assert_select 'option:nth-of-type(1)', text: 'Redmine Admin'
+      assert_select 'option:nth-of-type(2)', text: 'John Smith'
+      assert_select 'option:nth-of-type(3)', text: 'Robert Hill'
+    end
+  ensure
+    User.current = nil
   end
 
   def test_stylesheet_link_tag_should_pick_the_default_stylesheet

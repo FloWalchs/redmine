@@ -11,7 +11,7 @@ sv:
       # Sets the separator between the units, for more precision (e.g. 1.0 / 2.0 == 0.5)
       separator: ","
       # Delimets thousands (e.g. 1,000,000 is a million) (always in groups of three)
-      delimiter: "."
+      delimiter: " "
       # Number of decimals, behind the separator (the number 1 with a precision of 2 gives: 1.00)
       precision: 2
 
@@ -189,8 +189,8 @@ sv:
   general_text_no: 'nej'
   general_text_yes: 'ja'
   general_lang_name: 'Swedish (Svenska)'
-  general_csv_separator: ','
-  general_csv_decimal_separator: '.'
+  general_csv_separator: ';'
+  general_csv_decimal_separator: ','
   general_csv_encoding: ISO-8859-1
   general_pdf_fontname: freesans
   general_pdf_monospaced_fontname: freemono
@@ -1443,7 +1443,7 @@ sv:
   setting_issue_done_ratio_interval: 'Alternativ för intervall för "% Klar"'
   setting_copy_attachments_on_issue_copy: Kopiera bilagor vid kopiering
   field_thousands_delimiter: Tusenavgränsare
-  label_involved_principals: 'Skapare / Tidigare tilldelad'
+  label_involved_principals: Author / Recent participants
   label_attachment_summary:
     zero: '%{filename}'
     one: '%{filename} och 1 fil'

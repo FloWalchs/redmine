@@ -75,8 +75,8 @@ el:
 
   number:
     format:
-      separator: "."
-      delimiter: ""
+      separator: ","
+      delimiter: "."
       precision: 3
     human:
       format:
@@ -148,8 +148,8 @@ el:
   general_text_no: 'όχι'
   general_text_yes: 'ναι'
   general_lang_name: 'Greek (Ελληνικά)'
-  general_csv_separator: ','
-  general_csv_decimal_separator: '.'
+  general_csv_separator: ';'
+  general_csv_decimal_separator: ','
   general_csv_encoding: UTF-8
   general_pdf_fontname: freesans
   general_pdf_monospaced_fontname: freemono
@@ -1479,7 +1479,7 @@ el:
   setting_issue_done_ratio_interval: Done ratio options interval
   setting_copy_attachments_on_issue_copy: Copy attachments on copy
   field_thousands_delimiter: Thousands delimiter
-  label_involved_principals: Author / Previous assignee
+  label_involved_principals: Author / Recent participants
   label_attachment_summary:
     zero: "%{filename}"
     one: "%{filename} and 1 file"

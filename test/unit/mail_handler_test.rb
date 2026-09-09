@@ -907,7 +907,7 @@ class MailHandlerTest < ActiveSupport::TestCase
       "Auto-Submitted: auto-generated",
       'X-Autoreply: yes'
     ].each do |header|
-      raw = IO.read(File.join(FIXTURES_PATH, 'ticket_on_given_project.eml'))
+      raw = File.read(File.join(FIXTURES_PATH, 'ticket_on_given_project.eml'))
       raw = header + "\n" + raw
 
       assert_no_difference 'Issue.count' do
@@ -920,7 +920,7 @@ class MailHandlerTest < ActiveSupport::TestCase
     [
       "Auto-Submitted: auto-forwarded"
     ].each do |header|
-      raw = IO.read(File.join(FIXTURES_PATH, 'ticket_on_given_project.eml'))
+      raw = File.read(File.join(FIXTURES_PATH, 'ticket_on_given_project.eml'))
       raw = header + "\n" + raw
 
       assert_difference 'Issue.count', 1 do
@@ -1218,7 +1218,7 @@ class MailHandlerTest < ActiveSupport::TestCase
     assert_equal "This is a reply to a comment.", m.content
   end
 
-  def test_reply_to_a_nonexistant_news
+  def test_reply_to_a_nonexistent_news
     News.find(1).destroy
     assert_no_difference('Comment.count') do
       assert_not submit_email('news_reply.eml')
@@ -1493,7 +1493,7 @@ class MailHandlerTest < ActiveSupport::TestCase
   private
 
   def submit_email(filename, options={})
-    raw = IO.read(File.join(FIXTURES_PATH, filename))
+    raw = File.read(File.join(FIXTURES_PATH, filename))
     yield raw if block_given?
     MailHandler.receive(raw, options)
   end

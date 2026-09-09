@@ -90,7 +90,7 @@ et:
 
   number:
     format:
-      separator: "."
+      separator: ","
       delimiter: " "
       precision: 3
 
@@ -164,8 +164,8 @@ et:
   general_text_no: "ei"
   general_text_yes: "jah"
   general_lang_name: "Estonian (Eesti)"
-  general_csv_separator: ","
-  general_csv_decimal_separator: "."
+  general_csv_separator: ';'
+  general_csv_decimal_separator: ','
   general_csv_encoding: ISO-8859-13
   general_pdf_fontname: freesans
   general_pdf_monospaced_fontname: freemono
@@ -1484,7 +1484,7 @@ et:
   setting_issue_done_ratio_interval: Done ratio options interval
   setting_copy_attachments_on_issue_copy: Copy attachments on copy
   field_thousands_delimiter: Thousands delimiter
-  label_involved_principals: Author / Previous assignee
+  label_involved_principals: Author / Recent participants
   label_attachment_summary:
     zero: "%{filename}"
     one: "%{filename} and 1 file"

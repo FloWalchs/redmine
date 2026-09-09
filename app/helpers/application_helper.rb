@@ -80,7 +80,17 @@ module ApplicationHelper
   end
 
   def link_to_mention(user, object, options={})
-    link_to_user(user, only_path: options[:only_path], class: 'user-mention', mention: true)
+    css_classes = ['user-mention']
+    if user.is_a?(User)
+      css_classes << 'user-current' if user == User.current
+      if object.respond_to?(:visible?)
+        @mention_visible_cache ||= {}
+        is_visible = @mention_visible_cache[[object, user.id]] ||= object.visible?(user)
+        css_classes << 'user-mentionable' if is_visible
+      end
+    end
+
+    link_to_user(user, only_path: options[:only_path], class: css_classes.join(' '), mention: true)
   end
 
   # Displays a link to edit group page if current user is admin
@@ -690,8 +700,17 @@ module ApplicationHelper
     involved_principals = []
     # This optgroup is displayed only when editing a single issue
     if @issue.present? && !@issue.new_record?
+      last_notes_author =
+        @issue.journals.visible(User.current).
+          where.not(:notes => '').
+          reorder(:id => :desc).
+          first&.user
       involved_principals =
-        [@issue.author, @issue.prior_assigned_to].uniq.compact.map do |principal|
+        [
+          @issue.author,
+          @issue.prior_assigned_to,
+          last_notes_author
+        ].uniq.compact.map do |principal|
           [principal, {:disabled => !collection.include?(principal)}]
         end
     end
@@ -1333,7 +1352,8 @@ module ApplicationHelper
             end
           elsif sep == "@"
             name = remove_double_quotes(identifier)
-            u = User.visible.find_by_login(name.downcase)
+            @users_by_login ||= {}
+            u = @users_by_login.fetch(name.downcase) { |k| @users_by_login[k] = User.visible.find_by_login(k) }
             link = link_to_mention(u, obj, only_path: only_path) if u
           end
         end
