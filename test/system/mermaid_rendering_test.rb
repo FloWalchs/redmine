@@ -58,14 +58,15 @@ class MermaidRenderingTest < ApplicationSystemTestCase
     assert_not_equal 'none', page.evaluate_script("getComputedStyle(document.querySelector('div.mermaid svg')).display")
     page.driver.browser.execute_cdp('Emulation.setEmulatedMedia', media: '')
 
-    # suppressErrors keeps invalid diagrams from throwing: mermaid.js renders
-    # its own error diagram into the container instead, without breaking the
-    # rest of the page.
+    # An invalid diagram renders mermaid.js's own error diagram,
+    # which replaces the code block just like a successful one does.
     issue.update_column(:description, "```mermaid\nthis is not a valid mermaid diagram(((\n```")
     visit "/issues/#{issue.id}"
 
     within('div.description') do
       assert_selector 'div.mermaid svg .error-icon'
+      assert_selector 'code[data-controller=mermaid]', visible: :all
+      assert_no_selector 'code[data-controller=mermaid]'
     end
     assert_selector '#header'
     assert_selector '#content'

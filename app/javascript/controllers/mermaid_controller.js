@@ -67,10 +67,10 @@ export default class extends Controller {
     container.textContent = this.element.textContent.trim();
     (pre || this.element).insertAdjacentElement('afterend', container);
 
-    mermaid.run({ nodes: [container], suppressErrors: true }).then(() => {
+    // mermaid.js draws its own error diagram on failure, so the code block is replaced either way.
+    // The rejection is left for the browser to report.
+    mermaid.run({ nodes: [container], suppressErrors: false }).finally(() => {
       if (pre) pre.style.display = 'none';
-    }).catch((error) => {
-      console.error('Failed to render mermaid diagram:', error);
     });
   }
 }
