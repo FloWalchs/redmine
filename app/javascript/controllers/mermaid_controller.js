@@ -67,10 +67,27 @@ export default class extends Controller {
     container.textContent = this.element.textContent.trim();
     (pre || this.element).insertAdjacentElement('afterend', container);
 
-    // mermaid.js draws its own error diagram on failure, so the code block is replaced either way.
-    // The rejection is left for the browser to report.
-    mermaid.run({ nodes: [container], suppressErrors: false }).finally(() => {
+    // mermaid.js draws its own error diagram on failure
+    // replace it with a redmine flash message while keeping the source block available
+    // so the invalid diagram can be inspected and copied
+    mermaid.run({ nodes: [container], suppressErrors: false }).then(() => {
       if (pre) pre.style.display = 'none';
+    }).catch((error) => {
+      container.remove();
+
+      const errorElement = document.createElement('div');
+      errorElement.className = 'flash error';
+      errorElement.innerHTML = '<p>Failed to render mermaid diagram:</p>';
+
+      const message = document.createElement('p');
+      message.textContent = error?.message || String(error);
+
+      errorElement.appendChild(message);
+
+      const wrapper = pre.closest('.pre-wrapper');
+      if (wrapper) {
+        wrapper.insertAdjacentElement('beforebegin', errorElement);
+      }
     });
   }
 }
